@@ -1112,8 +1112,11 @@ static void GIDPercentEncodePlusInQuery(NSURLComponents *components) {
   OIDTokenRequest *tokenRequest;
   if (!authState.lastTokenResponse.accessToken &&
       authState.lastAuthorizationResponse.authorizationCode) {
+    NSString *userAgent = [NSBundle.mainBundle objectForInfoDictionaryKey:@"KakaduUserAgent"];
+    NSDictionary *headers = userAgent.length ? @{@"User-Agent" : userAgent} : nil;
     tokenRequest = [authState.lastAuthorizationResponse
-        tokenExchangeRequestWithAdditionalParameters:additionalParameters];
+        tokenExchangeRequestWithAdditionalParameters:additionalParameters
+                                  additionalHeaders:headers];
   } else {
     [additionalParameters
         addEntriesFromDictionary:authState.lastTokenResponse.request.additionalParameters];
